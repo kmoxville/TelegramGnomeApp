@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <StartupObject>TelegramApp.Program</StartupObject>
+    <ApplicationIcon />
+    <ApplicationManifest>Application.manifest</ApplicationManifest>
+    <AssemblyName>TelegramApp</AssemblyName>
+    <RootNamespace>TelegramApp</RootNamespace>
+    <UserSecretsId>4eaff004-2ef7-4a92-b6b6-695bbbe2499d</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Data\TelegramIcon.png" />
+    <None Remove="Views\ui\ChatPage.glade" />
+    <None Remove="Views\ui\ChatPage.ui" />
+    <None Remove="Views\ui\PhonePage.glade" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\TelegramIcon.png" />
+    <EmbeddedResource Include="Views\ui\ChatPage.glade" />
+    <EmbeddedResource Include="Views\ui\MainWindow.glade" />
+    <EmbeddedResource Include="Views\ui\PhonePage.glade" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.22.24.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="NLog" Version="4.6.5" />
+    <PackageReference Include="NSubsys" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="TDLib" Version="1.3.0" />
+    <PackageReference Include="TDLib.Api" Version="1.3.0" />
+    <PackageReference Include="tdlib.native" Version="1.3.0" />
+    <PackageReference Include="xunit.assert" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
