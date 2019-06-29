@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Gtk;
 
-namespace TelegramApp.views
+namespace TelegramApp.Views
 {
     class DigitsEntry : Entry
     {

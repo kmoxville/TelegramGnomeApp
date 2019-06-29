@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Gdk;
 using Gtk;
 
-namespace TelegramApp.views
+namespace TelegramApp.Views
 {
     class CodePage : Box
     {

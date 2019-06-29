@@ -5,7 +5,7 @@ using System.Text;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
-namespace TelegramApp.views
+namespace TelegramApp.Views
 {
     class PhonePage : Box
     {

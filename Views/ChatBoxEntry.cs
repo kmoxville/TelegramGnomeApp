@@ -3,56 +3,106 @@ using System.Collections.Generic;
 using System.Text;
 using Gdk;
 using Gtk;
+using NLog;
 using UI = Gtk.Builder.ObjectAttribute;
 
-namespace TelegramApp.views
+namespace TelegramApp.Views
 {
     class ChatBoxEntry : ListBoxRow
     {
-        Label _channel = new Label();
+        [UI]
+        Label _title = new Label();
+
+        [UI]
         Label _lastMessage = new Label();
+
+        [UI]
         Image _icon = new Image();
-        Label _unread = new Label();
+
+        [UI]
+        Label _unreadCount = new Label();
+
+        [UI]
         Label _date = new Label();
-        Label _type = new Label();
+        Chat _chat;
 
-        public ChatBoxEntry()
+        private Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public ChatBoxEntry(Chat chat) : this(chat, new Builder("TelegramApp.Views.ui.ChatBoxEntry.glade"))
         {
-            var grid = new Grid();
 
-
-            var hbox = new HBox(false, 10);
-            //var pixbuf = new Pixbuf(null, "TelegramApp.Data.TelegramIcon.png");
-            //Icon = new Image(pixbuf.ScaleSimple(64, 64, InterpType.Bilinear));
-
-
-            hbox.PackStart(_icon, false, false, 0);
-            var vbox = new VBox(false, 0);
-            vbox.PackStart(_channel, false, false, 5);
-            vbox.PackStart(_lastMessage, false, false, 5);
-            vbox.Halign = Align.Start;
-            vbox.Valign = Align.Center;
-            hbox.PackStart(vbox, true, true, 0);
-
-            vbox = new VBox(false, 0);
-            vbox.PackStart(_date, false, false, 5);
-            vbox.PackStart(_unread, false, false, 5);
-            vbox.Halign = Align.Center;
-            vbox.Valign = Align.Center;
-            hbox.PackStart(vbox, false, false, 0);
-
-            this.Add(hbox);
         }
 
-        public string Channel
+        public ChatBoxEntry(Chat chat, Builder builder) : base(builder.GetObject("_chatBoxEntryRoot").Handle)
+        {
+            builder.Autoconnect(this);
+            _chat = chat;
+            Chat_PropertyChanged(_chat, new System.ComponentModel.PropertyChangedEventArgs("kek"));
+            ShowAll();
+            _chat.PropertyChanged += Chat_PropertyChanged;            
+        }
+
+        private void Chat_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Gtk.Application.Invoke((oo, ee) =>
+            {
+                var chat = sender as Chat;
+                Title = chat.Title;
+                var lastMessage = chat.LastMessage?.Content;
+                switch (lastMessage)
+                {
+                    case TdLib.TdApi.MessageContent.MessageText o:
+                        LastMessage = o.Text.Text;
+                        break;
+                    case TdLib.TdApi.MessageContent.MessageAnimation _:
+                        LastMessage = "gif";
+                        break;
+                    default:
+                        Logger.Warn("Unhandled message content");
+                        break;
+                }
+
+                if (chat.Photo == null)
+                {
+                    Icon = new Pixbuf(null, "TelegramApp.Data.DeletedChat.png");
+                }
+                else
+                {
+                    Icon = new Pixbuf(chat.Photo.Small.Local.Path);
+                }
+                
+                UnreadCount = chat.UnreadCount;
+                if (chat.LastMessage != null)
+                    Date = UnixTimeStampToDateTime(chat.LastMessage.Date);
+            });    
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+
+        /*private void Chat_OnChanged(Chat chat, ChangedEventArgs args)
+        {
+            Channel = chat.Title;
+            LastMessage = chat.LastMessage.Content.ToString();
+            Icon = chat.Photo.Small.Local.Path;
+            UnreadCount = chat.UnreadCount;
+            Date = new DateTime(chat.LastMessage.Date);
+        }*/
+
+        public string Title
         {
             get
             {
-                return _channel.Text;
+                return _title.Text;
             }
             set
             {
-                _channel.Text = value;
+                _title.Text = value;
             }
         }
 
@@ -68,16 +118,18 @@ namespace TelegramApp.views
             }
         }
 
-        public string Icon
+        public Pixbuf Icon
         {
             get
             {
-                return "";
+                return null;
             }
             set
             {
-                var pixbuf = new Pixbuf(null, value);
-                _icon.Pixbuf = pixbuf.ScaleSimple(64, 64, InterpType.Bilinear);
+                //if (string.IsNullOrEmpty(value))
+                //    return;
+                //var pixbuf = new Pixbuf(value);
+                _icon.Pixbuf = value.ScaleSimple(64, 64, InterpType.Bilinear);
             }
         }
 
@@ -85,14 +137,14 @@ namespace TelegramApp.views
         {
             get
             {
-                return int.Parse(_unread.Text);
+                return int.Parse(_unreadCount.Text);
             }
             set
             {
                 if (value > 0)
-                    _unread.Text = value.ToString();
+                    _unreadCount.Text = value.ToString();
                 else
-                    _unread.Text = "";
+                    _unreadCount.Text = "";
             }
         }
 
@@ -104,7 +156,7 @@ namespace TelegramApp.views
             }
             set
             {
-                _date.Text = value.ToShortDateString();
+                _date.Text = value.ToString("dd/MM/yyyy");
             }
         }
     }

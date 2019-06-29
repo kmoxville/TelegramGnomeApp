@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Resources;
 using Gtk;
 using NLog;
-using TelegramApp.views;
+using TelegramApp.Views;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace TelegramApp
@@ -78,7 +78,7 @@ namespace TelegramApp
             }
             _listBox.ShowAll();*/
 
-            NavigateTo(PageType.Chat);
+            NavigateToAsync(PageType.Chat);
             Program.Client.Start();
         }
 
@@ -86,15 +86,15 @@ namespace TelegramApp
         {
             if (args.State == Client.AuthState.WaitPhoneNumber)
             {
-                NavigateTo(PageType.Phone);
+                NavigateToAsync(PageType.Phone);
             }
             if (args.State == Client.AuthState.WaitCode)
             {
-                NavigateTo(PageType.Code);
+                NavigateToAsync(PageType.Code);
             }
             if (args.State == Client.AuthState.Ready)
             {
-                NavigateTo(PageType.Chat);
+                NavigateToAsync(PageType.Chat);
             }
         }
 
@@ -105,7 +105,7 @@ namespace TelegramApp
             Chat
         }
 
-        public void NavigateTo(PageType type) //Fixme
+        public void NavigateToAsync(PageType type) //Fixme
         {
             Logger.Info("Navigated to {@type}", type);
 

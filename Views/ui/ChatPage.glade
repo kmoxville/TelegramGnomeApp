@@ -7,18 +7,19 @@
     <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="hexpand">False</property>
-    <property name="vexpand">False</property>
+    <property name="vexpand">True</property>
     <child>
       <object class="GtkBox" id="_leftPane">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkListBox" id="_listBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">False</property>
-            <property name="vexpand">False</property>
+            <property name="vexpand">True</property>
           </object>
           <packing>
             <property name="expand">True</property>

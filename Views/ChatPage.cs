@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TelegramApp.Views;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace TelegramApp
@@ -19,7 +20,24 @@ namespace TelegramApp
         public ChatPage(Builder builder) : base(builder.GetObject("_rootBox").Handle)
         {
             builder.Autoconnect(this);
+            Program.Client.OnNewChat += OnNewChatHandler;
             ShowAll();
+        }
+
+        private void OnNewChatHandler(object sender, Client.NewChatEventArgs args)
+        {
+            Gtk.Application.Invoke((o, e) =>
+            {
+                    _listBox.Add(new ChatBoxEntry(args.Chat)
+                    {
+                        //LastMessage = chat.LastMessage.Content.ToString(),
+                        //Icon = chat.Photo.Small.Local.Path,
+                        //UnreadCount = chat.UnreadCount,
+                        //Date = new DateTime(chat.LastMessage.Date)
+                    });
+
+            });
+            
         }
 
         public int PaneWidth

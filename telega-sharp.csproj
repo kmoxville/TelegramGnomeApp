@@ -11,13 +11,17 @@
     <UserSecretsId>4eaff004-2ef7-4a92-b6b6-695bbbe2499d</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Data\DeletedChat.png" />
     <None Remove="Data\TelegramIcon.png" />
+    <None Remove="Views\ui\ChatBoxEntry.glade" />
     <None Remove="Views\ui\ChatPage.glade" />
     <None Remove="Views\ui\ChatPage.ui" />
     <None Remove="Views\ui\PhonePage.glade" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\DeletedChat.png" />
     <EmbeddedResource Include="Data\TelegramIcon.png" />
+    <EmbeddedResource Include="Views\ui\ChatBoxEntry.glade" />
     <EmbeddedResource Include="Views\ui\ChatPage.glade" />
     <EmbeddedResource Include="Views\ui\MainWindow.glade" />
     <EmbeddedResource Include="Views\ui\PhonePage.glade" />
